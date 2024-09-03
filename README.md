@@ -16,3 +16,14 @@
 >```打包```
 >```pyinstaller -F main.py```
 >```pyinstaller -w -F main.py  (去掉控制台窗口的版本)```
+
+**文件**
+```
+workfile
+|-__pychane__   python运行时文件夹
+|-DataDown.py   数据处理函数库
+|-GUI_Back.py   GUI中间件-后端连接器
+|-GUI_Head.py   GUI前端
+main.py         主程序
+README.md
+```
