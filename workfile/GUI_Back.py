@@ -16,6 +16,7 @@ from . import GUI_Head
 class DataType:
     Name = 'string' #代办名，中间件会进行检查，不允许出现除字母外的字符，不得超过八个字符
     Time = 'string' #截止时间，中间件会进行检查，不允许出现除数字、'-'外的字符，格式必须为"YY-MM-DD-HH-MM-SS"
+    Ptr = 'string' #待办首地址
     def __init__(self):
         self.Name = ''
         self.Time = ''
