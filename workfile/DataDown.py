@@ -6,15 +6,15 @@ def CharToData(char):
     #8->5
     #传入num，传出bytes
     data=[0,0,0,0,0]
-    data[0] = (char[0] << 3) + (char[1] >> 2)
+    data[0] = ((char[0] << 3)&0xFF) + ((char[1] >> 2)&0xFF)
 	# 取char1剩余两位与char2全位与char3前一位
-    data[1] = (char[1] << 6) + (char[2] << 1) + (char[3] >> 4)
+    data[1] = ((char[1] << 6)&0xFF) + ((char[2] << 1)&0xFF) + ((char[3] >> 4)&0xFF)
 	# 取char3剩余四位与char4前四位
-    data[2] = (char[3] << 4) + (char[4] >> 1)
+    data[2] = ((char[3] << 4)&0xFF) + ((char[4] >> 1)&0xFF)
 	# 取char4剩余一位与char5全位与char6前两位
-    data[3] = (char[4] << 7) + (char[5] << 2) + (char[6] >> 3)
+    data[3] = ((char[4] << 7)&0xFF) + ((char[5] << 2)&0xFF) + ((char[6] >> 3)&0xFF)
 	# 取char6剩余三位与char7全位
-    data[4] = (char[6] << 5) + char[7]
+    data[4] = ((char[6] << 5)&0xFF) + char[7]
     return bytes(data)
     
 def DataToChar(data):
