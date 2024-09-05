@@ -136,7 +136,7 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer18 = wx.BoxSizer(wx.HORIZONTAL)
 
-		self.m_staticText30 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, 0|wx.BORDER_SUNKEN)
+		self.m_staticText30 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, wx.ST_NO_AUTORESIZE|wx.BORDER_SUNKEN)
 		self.m_staticText30.Wrap(-1)
 
 		bSizer18.Add(self.m_staticText30, 2, wx.ALL, 5)
@@ -146,7 +146,7 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer18.Add(self.m_staticText31, 1, wx.ALL, 5)
 
-		self.m_staticText32 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, 0|wx.BORDER_SUNKEN)
+		self.m_staticText32 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, wx.ST_NO_AUTORESIZE|wx.BORDER_SUNKEN)
 		self.m_staticText32.Wrap(-1)
 
 		bSizer18.Add(self.m_staticText32, 2, wx.ALL, 5)
@@ -156,7 +156,7 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer18.Add(self.m_staticText33, 1, wx.ALL, 5)
 
-		self.m_staticText34 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, 0|wx.BORDER_SUNKEN)
+		self.m_staticText34 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, wx.ST_NO_AUTORESIZE|wx.BORDER_SUNKEN)
 		self.m_staticText34.Wrap(-1)
 
 		bSizer18.Add(self.m_staticText34, 2, wx.ALL, 5)
@@ -171,7 +171,7 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer19 = wx.BoxSizer(wx.HORIZONTAL)
 
-		self.m_staticText36 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, 0|wx.BORDER_SUNKEN)
+		self.m_staticText36 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, wx.ST_NO_AUTORESIZE|wx.BORDER_SUNKEN)
 		self.m_staticText36.Wrap(-1)
 
 		bSizer19.Add(self.m_staticText36, 2, wx.ALL, 5)
@@ -181,7 +181,7 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer19.Add(self.m_staticText37, 1, wx.ALL, 5)
 
-		self.m_staticText38 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, 0|wx.BORDER_SUNKEN)
+		self.m_staticText38 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, wx.ST_NO_AUTORESIZE|wx.BORDER_SUNKEN)
 		self.m_staticText38.Wrap(-1)
 
 		bSizer19.Add(self.m_staticText38, 2, wx.ALL, 5)
@@ -191,7 +191,7 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer19.Add(self.m_staticText39, 1, wx.ALL, 5)
 
-		self.m_staticText40 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, 0|wx.BORDER_SUNKEN)
+		self.m_staticText40 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, wx.ST_NO_AUTORESIZE|wx.BORDER_SUNKEN)
 		self.m_staticText40.Wrap(-1)
 
 		bSizer19.Add(self.m_staticText40, 2, wx.ALL, 5)
@@ -305,7 +305,7 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer7 = wx.BoxSizer(wx.HORIZONTAL)
 
-		self.m_staticText321 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, 0|wx.BORDER_SUNKEN)
+		self.m_staticText321 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, wx.ST_NO_AUTORESIZE|wx.BORDER_SUNKEN)
 		self.m_staticText321.Wrap(-1)
 
 		bSizer7.Add(self.m_staticText321, 2, wx.ALL, 5)
@@ -315,7 +315,7 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer7.Add(self.m_staticText331, 0, wx.ALL, 5)
 
-		self.m_staticText341 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, 0|wx.BORDER_SUNKEN)
+		self.m_staticText341 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, wx.ST_NO_AUTORESIZE|wx.BORDER_SUNKEN)
 		self.m_staticText341.Wrap(-1)
 
 		bSizer7.Add(self.m_staticText341, 1, wx.ALL, 5)
@@ -325,7 +325,7 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer7.Add(self.m_staticText351, 0, wx.ALL, 5)
 
-		self.m_staticText361 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, 0|wx.BORDER_SUNKEN)
+		self.m_staticText361 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, wx.ST_NO_AUTORESIZE|wx.BORDER_SUNKEN)
 		self.m_staticText361.Wrap(-1)
 
 		bSizer7.Add(self.m_staticText361, 1, wx.ALL, 5)
@@ -335,7 +335,7 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer7.Add(self.m_staticText371, 0, wx.ALL, 5)
 
-		self.m_staticText381 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, 0|wx.BORDER_SUNKEN)
+		self.m_staticText381 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, wx.ST_NO_AUTORESIZE|wx.BORDER_SUNKEN)
 		self.m_staticText381.Wrap(-1)
 
 		bSizer7.Add(self.m_staticText381, 1, wx.ALL, 5)
@@ -345,7 +345,7 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer7.Add(self.m_staticText391, 0, wx.ALL, 5)
 
-		self.m_staticText401 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, 0|wx.BORDER_SUNKEN)
+		self.m_staticText401 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, wx.ST_NO_AUTORESIZE|wx.BORDER_SUNKEN)
 		self.m_staticText401.Wrap(-1)
 
 		bSizer7.Add(self.m_staticText401, 1, wx.ALL, 5)
@@ -355,7 +355,7 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer7.Add(self.m_staticText411, 0, wx.ALL, 5)
 
-		self.m_staticText42 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, 0|wx.BORDER_SUNKEN)
+		self.m_staticText42 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, wx.ST_NO_AUTORESIZE|wx.BORDER_SUNKEN)
 		self.m_staticText42.Wrap(-1)
 
 		bSizer7.Add(self.m_staticText42, 1, wx.ALL, 5)
@@ -365,7 +365,7 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer7.Add(self.m_staticText43, 0, wx.ALL, 5)
 
-		self.m_staticText44 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, 0|wx.BORDER_SUNKEN)
+		self.m_staticText44 = wx.StaticText(self, wx.ID_ANY, _(u"NaN"), wx.DefaultPosition, wx.DefaultSize, wx.ST_NO_AUTORESIZE|wx.BORDER_SUNKEN)
 		self.m_staticText44.Wrap(-1)
 
 		bSizer7.Add(self.m_staticText44, 1, wx.ALL, 5)

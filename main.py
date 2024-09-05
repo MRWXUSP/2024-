@@ -6,6 +6,7 @@
 import wx
 
 from workfile.GUI_Back import GUI_Back
+from workfile.com import Communication
 
 
 app = wx.App(False)

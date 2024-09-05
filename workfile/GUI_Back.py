@@ -4,23 +4,32 @@
 本文件为GUI界面的前端处理事件,与后端交换数据接口中间件,此文件需要添加之处会标明;
 请不要在此文件添加后端函数代码实例,仅填充函数使用语句即可
 '''
-#import <你的后端文件名>
 import wx
 import time
 
 
 from . import GUI_Head
+from . import com as commu
+from . import DataDown as trans
 
 #以下为数据类型定义,请不要修改
 #在待办条目中会以:"Name\tTime"的形式体现
 class DataType:
     Name = 'string' #代办名，中间件会进行检查，不允许出现除字母外的字符，不得超过八个字符
     Time = 'string' #截止时间，中间件会进行检查，不允许出现除数字、'-'外的字符，格式必须为"YY-MM-DD-HH-MM-SS"
+    HumanNameList = []
+    NameList = []
+    TimeList = []
+    merge = [] #合并后的数据
     Ptr = 'string' #待办首地址
+
     def __init__(self):
         self.Name = ''
         self.Time = ''
-    
+        self.TimeList = []
+        self.NameList = []
+        self.merge = []
+
     def SetDataByNT(self, Name, Time):
         self.Name = Name
         self.Time = Time
@@ -29,11 +38,47 @@ class DataType:
         TempData = Data.split('\t')
         self.Name = TempData[0]
         self.Time = TempData[1]
+        self.Ptr = TempData[2]
+    
+    def MakeNameToChar(self):
+        for i in range(0,8):
+            if(self.Name[i]=='_'):
+                self.HumanNameList.append(0)
+            else:
+                self.HumanNameList.append(ord(self.Name[i])-ord('a')+1)
+
+    def ConvertData(self,type):
+        # 将 Name 分解成字符的 int 形式
+        self.MakeNameToChar()
+        # 压缩成5byte
+        self.NameList=trans.CharToData(self.HumanNameList)
+        
+        # 将 Time 中的 "-" 删除后分解成 bytes 类型的数据
+        cleaned_time = self.Time.replace('-', ' ')
+        self.TimeList = bytes.fromhex(cleaned_time)
+        #合并数据成可发送形式
+        #0-新增 1-修改
+        if(type==0):
+            self.merge=bytes(self.NameList)+bytes(self.TimeList)
+        
+        else:
+            self.merge=bytes(self.NameList)+bytes(self.TimeList)+bytes.fromhex(self.Ptr)
+        
+        pass
+
+    # 示例用法
+    #data = DataType()
+    #data.SetDataByNT("example", "23-12-31-23-59-59")
+    #data.ConvertData()
+    #print(data.NameList)  # 输出: [101, 120, 97, 109, 112, 108, 101]
+    #print(data.TimeList)  # 输出: [b'2', b'3', b'-', b'1', b'2', b'-', b'3', b'1', b'-', b'2', b'3', b'-', b'5', b'9', b'-', b'5', b'9']
 
 
 class GUI_Back( GUI_Head.MyFrame1 ):
+    commu = None
     def __init__( self, parent ):
         GUI_Head.MyFrame1.__init__( self, parent )
+        self.commu = commu.Communication()#####
     
     #此函数为输出日志的函数,参数为输出的日志string,前带有标准化输出的时间,注意日志自带换行
     def OutPutLog(self, log):
@@ -50,7 +95,7 @@ class GUI_Back( GUI_Head.MyFrame1 ):
         TempList.sort(key=lambda x:x.Time)
         self.m_checkList2.Clear()
         for i in range(len(TempList)):
-            self.m_checkList2.Append(TempList[i].Name+'\t'+TempList[i].Time)
+            self.m_checkList2.Append(TempList[i].Name+'\t'+TempList[i].Time+'\t'+TempList[i].Ptr)
 
     #此函数为串口打开按钮的事件处理函数
     def OpenSerialH( self, event ):
@@ -62,7 +107,9 @@ class GUI_Back( GUI_Head.MyFrame1 ):
         Serial_Check = self.m_choice4.GetStringSelection()
         Serial_Stop = self.m_choice5.GetStringSelection()
         '''此处添加串口打开函数,并且将返回值赋给SerialState,返回值为串口状态,成功为'OPEN',失败为'CLOSE' '''
-        SerialState = 'OPEN'
+        SerialState = self.commu.open_port(SerialPort, SerialBaud)
+        #SerialState = 'OPEN'
+        '''此处添加串口打开函数,并且将返回值赋给SerialState,返回值为串口状态,成功为'OPEN',失败为'CLOSE' '''
         self.OutPutLog("串口号:"+SerialPort+" 波特率:"+SerialBaud+" 数据位:"+Serial_Data+" 校验位:"+Serial_Check+" 停止位:"+Serial_Stop)
         if SerialState == 'OPEN':
             self.OutPutLog("串口打开成功")
@@ -86,7 +133,10 @@ class GUI_Back( GUI_Head.MyFrame1 ):
     def CloseSerialH( self, event ):
         self.OutPutLog("正在关闭串口...")
         '''此处添加串口关闭函数,并且将返回值赋给SerialState,返回值为串口状态,成功为'CLOSE',失败为'OPEN' '''
-        SerialState = 'CLOSE'
+        SerialState = self.commu.close_port()
+        #SerialState = 'CLOSE'
+        '''此处添加串口关闭函数,并且将返回值赋给SerialState,返回值为串口状态,成功为'CLOSE',失败为'OPEN' '''
+        
         if SerialState == 'OPEN':
             self.OutPutLog("串口关闭失败")
         else:
@@ -138,7 +188,7 @@ class GUI_Back( GUI_Head.MyFrame1 ):
     #此函数为勾选待办条目后的事件处理函数
     def UpdateDisplayByCheckH( self, event ):
         TempData = DataType()
-        TempData.SetDataByString(self.m_listBox1.GetString(self.m_listBox1.GetSelection()))
+        TempData.SetDataByString(self.m_checkList2.GetString(self.m_checkList2.GetSelection()))
         self.m_staticText321.Label = TempData.Name
         self.m_staticText341.Label = TempData.Time[0:2]
         self.m_staticText361.Label = TempData.Time[3:5]
@@ -153,7 +203,7 @@ class GUI_Back( GUI_Head.MyFrame1 ):
         if DataType.Name == '' or DataType.Time == '':
             return 1
         for i in range(len(DataType.Name)):
-            if not DataType.Name[i].isalpha():
+            if (not DataType.Name[i].isalpha())and(DataType.Name[i] != '_'):
                 return 2
         if len(DataType.Name) > 8:
             return 3
@@ -171,7 +221,10 @@ class GUI_Back( GUI_Head.MyFrame1 ):
         '''此处添加读取数据函数,并且将返回值赋给DataList,返回值为一个list或元组(尽量用元组以避免被更改),
         每个元素为一个DataType类的实例,其中首位元素为当前学习板的时间,名称设置为"NowTime"若返回值为一个空元组,
         则说明数据读取失败,中间件会检查每一个元素的数据类型是否正确,不正确则会报告到日志并忽略该待办事项'''
-        DataList = ()
+        DataList = self.commu.read_all()
+        '''此处添加读取数据函数,并且将返回值赋给DataList,返回值为一个list或元组(尽量用元组以避免被更改),
+        每个元素为一个DataType类的实例,其中首位元素为当前学习板的时间,名称设置为"NowTime"若返回值为一个空元组,
+        则说明数据读取失败,中间件会检查每一个元素的数据类型是否正确,不正确则会报告到日志并忽略该待办事项'''
         if len(DataList) == 0:
             self.OutPutLog("数据读取失败")
             event.Skip()
@@ -179,18 +232,18 @@ class GUI_Back( GUI_Head.MyFrame1 ):
         self.m_checkList2.Clear()
         for i in range(len(DataList)):
             if i == 0:
-                if DataList[i].Name != 'NowTime':
+                if DataList[i].Name != '________':
                     self.OutPutLog("当前时间数据错误")
                 else:
-                    self.m_textCtrl2.SetValue(DataList[i].Time[0:2])
-                    self.m_textCtrl3.SetValue(DataList[i].Time[3:5])
-                    self.m_textCtrl4.SetValue(DataList[i].Time[6:8])
-                    self.m_textCtrl8.SetValue(DataList[i].Time[9:11])
-                    self.m_textCtrl9.SetValue(DataList[i].Time[12:14])
-                    self.m_textCtrl10.SetValue(DataList[i].Time[15:17])
+                    self.m_staticText30.Label = DataList[i].Time[0:2]
+                    self.m_staticText32.Label = DataList[i].Time[3:5]
+                    self.m_staticText34.Label = DataList[i].Time[6:8]
+                    self.m_staticText36.Label = DataList[i].Time[9:11]
+                    self.m_staticText38.Label = DataList[i].Time[12:14]
+                    self.m_staticText40.Label = DataList[i].Time[15:17]
                 continue
             if self.CheckData(DataList[i]) == 0:
-                self.m_checkList2.Append(DataList[i].Name+'\t'+DataList[i].Time)
+                self.m_checkList2.Append(DataList[i].Name+'\t'+DataList[i].Time+'\t'+DataList[i].Ptr)
             elif self.CheckData(DataList[i]) == 1:
                 self.OutPutLog("第"+str(i+1)+"个数据有时间或名称为空,已忽略.名称:"+DataList[i].Name+" 时间:"+DataList[i].Time)
             elif self.CheckData(DataList[i]) == 2:
@@ -207,7 +260,7 @@ class GUI_Back( GUI_Head.MyFrame1 ):
     #此函数为更改学习板时间按钮的事件处理函数
     def ChangeTimeH( self, event ):
         TempData = DataType()
-        TempData.Name = 'ChangeTime'
+        TempData.Name = 'XiuGai'
         TempData.Time = self.m_textCtrl2.GetValue()+'-'+self.m_textCtrl3.GetValue()+'-'+self.m_textCtrl4.GetValue()+'-'+self.m_textCtrl8.GetValue()+'-'+self.m_textCtrl9.GetValue()+'-'+self.m_textCtrl10.GetValue()
         if self.CheckData(TempData) != 0:
             TempDiaLog = Dialog_Back(self)
@@ -226,10 +279,14 @@ class GUI_Back( GUI_Head.MyFrame1 ):
             event.Skip()
             return
         self.OutPutLog("正在更改时间...")
-        #以下为更改时间的数据，是传入你函数的参数
-        TempTime = self.m_textCtrl2.GetValue()+'-'+self.m_textCtrl3.GetValue()+'-'+self.m_textCtrl4.GetValue()+'-'+self.m_textCtrl8.GetValue()+'-'+self.m_textCtrl9.GetValue()+'-'+self.m_textCtrl10.GetValue()
+        #以下为更改时间的数据，是传入你函数的参数#####
+        TempTime = [self.m_textCtrl2.GetValue(), self.m_textCtrl3.GetValue(), self.m_textCtrl4.GetValue(), self.m_textCtrl8.GetValue(), self.m_textCtrl9.GetValue(), self.m_textCtrl10.GetValue()]
+        '''此处添加更改时间函数,参数为string型TempTime列表,并且将返回值赋给TimeState,返回值为时间状态,成功为'TRUE',失败为'FALSE' '''
+        #####此处要添加压缩
+        #要再套转换函数
+        TimeState = self.commu.time_set(TempTime)
+        #TimeState = 'TRUE'
         '''此处添加更改时间函数,参数为string型TempTime,并且将返回值赋给TimeState,返回值为时间状态,成功为'TRUE',失败为'FALSE' '''
-        TimeState = 'TRUE'
         if TimeState == 'TRUE':
             self.OutPutLog("时间更改成功")
         else:
@@ -249,7 +306,8 @@ class GUI_Back( GUI_Head.MyFrame1 ):
             return
         self.OutPutLog("正在清空时间...")
         '''此处添加清空时间函数,没有参数,并且将返回值赋给TimeState,返回值为时间状态,成功为'TRUE',失败为'FALSE' '''
-        TimeState = 'TRUE'
+        TimeState=self.commu.time_clear()
+        '''此处添加清空时间函数,没有参数,并且将返回值赋给TimeState,返回值为时间状态,成功为'TRUE',失败为'FALSE' '''
         if TimeState == 'TRUE':
             self.OutPutLog("时间清空成功")
         else:
@@ -260,6 +318,8 @@ class GUI_Back( GUI_Head.MyFrame1 ):
     def AddTodoH( self, event ):
         TempData = DataType()
         TempData.Name = self.m_textCtrl7.GetValue()
+        while(len(TempData.Name) < 8):
+            TempData.Name += '_' #不足8位的用'_'补齐
         TempData.Time = self.m_textCtrl81.GetValue()+'-'+self.m_textCtrl91.GetValue()+'-'+self.m_textCtrl101.GetValue()+'-'+self.m_textCtrl11.GetValue()+'-'+self.m_textCtrl12.GetValue()+'-'+self.m_textCtrl13.GetValue()
         if self.CheckData(TempData) != 0:
             TempDiaLog = Dialog_Back(self)
@@ -273,11 +333,13 @@ class GUI_Back( GUI_Head.MyFrame1 ):
         self.OutPutLog("正在添加待办事项...")
         #TempData是传入你函数的参数
         '''此处添加添加待办事项函数,参数为类Datatype型,并且将返回值赋给AddState,返回值为添加状态,成功为'TRUE',失败为'FALSE' '''
-        AddState = 'TRUE'
+        AddState=self.commu.add_data(TempData)
+        '''此处添加添加待办事项函数,参数为类Datatype型,并且将返回值赋给AddState,返回值为添加状态,成功为'TRUE',失败为'FALSE' '''
         if AddState == 'TRUE':
-            self.OutPutLog("待办事项添加成功")
-            self.m_checkList2.Append(TempData.Name+'\t'+TempData.Time)
+            self.OutPutLog("待办事项添加成功，自动重新获取数据")
+            self.ReadDataH(event)
             self.ListSort()
+            self.OutPutLog("数据读取完毕")
         else:
             self.OutPutLog("待办事项添加失败")
         event.Skip()
@@ -299,10 +361,13 @@ class GUI_Back( GUI_Head.MyFrame1 ):
         TempData.SetDataByString(self.m_checkList2.GetString(self.m_checkList2.GetSelection()))
         self.OutPutLog("正在删除待办事项...")
         '''此处添加删除待办事项函数,并且将返回值赋给DelState,返回值为删除状态,成功为'TRUE',失败为'FALSE' '''
-        DelState = 'TRUE'
+        DelState=self.commu.delete_data(TempData)
+        '''此处添加删除待办事项函数,并且将返回值赋给DelState,返回值为删除状态,成功为'TRUE',失败为'FALSE' '''
         if DelState == 'TRUE':
-            self.OutPutLog("待办事项删除成功")
-            self.m_checkList2.Delete(self.m_checkList2.GetSelection())
+            self.OutPutLog("待办事项删除成功，自动重新获取数据")
+            self.ReadDataH(event)
+            self.ListSort()
+            self.OutPutLog("数据读取完毕")
         else:
             self.OutPutLog("待办事项删除失败")
         self.ListSort()
@@ -321,7 +386,11 @@ class GUI_Back( GUI_Head.MyFrame1 ):
             return
         TempData = DataType()
         TempData.Name = self.m_textCtrl7.GetValue()
+        #不足8位的用'_'补齐
+        while(len(TempData.Name) < 8):
+            TempData.Name += '_'
         TempData.Time = self.m_textCtrl81.GetValue()+'-'+self.m_textCtrl91.GetValue()+'-'+self.m_textCtrl101.GetValue()+'-'+self.m_textCtrl11.GetValue()+'-'+self.m_textCtrl12.GetValue()+'-'+self.m_textCtrl13.GetValue()
+        TempData.Ptr = self.m_checkList2.GetString(self.m_checkList2.GetSelection()).split('\t')[2]
         if self.CheckData(TempData) != 0:
             TempDiaLog = Dialog_Back(self)
             TempDiaLog.Title = "要修改的时间不合法!"
@@ -334,14 +403,13 @@ class GUI_Back( GUI_Head.MyFrame1 ):
         self.OutPutLog("正在更改待办事项...")
         #TempData是传入你函数的参数
         '''此处添加更改待办事项函数,参数为类Datatype型,并且将返回值赋给ChangeState,返回值为更改状态,成功为'TRUE',失败为'FALSE' '''
-        ChangeState = 'TRUE'
+        ChangeState=self.commu.change_data(TempData)
+        '''此处添加更改待办事项函数,参数为类Datatype型,并且将返回值赋给ChangeState,返回值为更改状态,成功为'TRUE',失败为'FALSE' '''
         if ChangeState == 'TRUE':
-            self.OutPutLog("待办事项更改成功")
-            TempData = DataType()
-            TempData.Name = self.m_textCtrl7.GetValue()
-            TempData.Time = self.m_textCtrl81.GetValue()+'-'+self.m_textCtrl91.GetValue()+'-'+self.m_textCtrl101.GetValue()+'-'+self.m_textCtrl11.GetValue()+'-'+self.m_textCtrl12.GetValue()+'-'+self.m_textCtrl13.GetValue()
-            self.m_checkList2.SetString(self.m_checkList2.GetSelection(),TempData.Name+'\t'+TempData.Time)
+            self.OutPutLog("待办事项更改成功，自动读取数据")
+            self.ReadDataH(event)
             self.ListSort()
+            self.OutPutLog("数据读取完毕")
         else:
             self.OutPutLog("待办事项更改失败")
         event.Skip()

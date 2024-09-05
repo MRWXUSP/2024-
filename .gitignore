@@ -1,0 +1,6 @@
+.DS_Store
+.vscode/settings.json
+workfile/__pycache__/com.cpython-312.pyc
+workfile/__pycache__/DataDown.cpython-312.pyc
+workfile/__pycache__/GUI_Back.cpython-312.pyc
+workfile/__pycache__/GUI_Head.cpython-312.pyc
