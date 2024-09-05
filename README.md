@@ -24,6 +24,8 @@ workfile
 |-DataDown.py   数据处理函数库
 |-GUI_Back.py   GUI中间件-后端连接器
 |-GUI_Head.py   GUI前端
+output
+|-BSP_DEMO.hex  STC-B板程序
 main.py         主程序
-README.md
+README.md       帮助文档
 ```
