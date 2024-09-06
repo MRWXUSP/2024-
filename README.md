@@ -1,6 +1,17 @@
 # 日程待办大作业
 
 **构建**
+学习板代码文件存在于```/output```中，第一次启动需要在main()函数添加
+```
+M24C02_Write(0x00,0x00)
+WriteDelay();
+M24C02_Write(0x01,0x00)
+WriteDelay();
+M24C02_Write(0x02,0x00)
+WriteDelay();
+```
+以初始化非易失性存储单元
+
 若要运行GUI，需要系统有**python3环境**与**wxpyhton**软件包
 >```获取wxpython```
 >```pip install -U wxpython```
